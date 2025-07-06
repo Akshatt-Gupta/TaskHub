@@ -53,7 +53,10 @@ function SignIn() {
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <div className='flex items-center justify-between'>
+                      <FormLabel>Password</FormLabel>
+                      <Link to="/forgot-password" className='text-sm text-blue-600'>Forgot Password</Link>
+                    </div>
                     <FormControl>
                       <Input type="password" placeholder="********" {...field} />
                     </FormControl>
@@ -66,7 +69,7 @@ function SignIn() {
               </Button>
             </form>
           </Form>
-          <CardFooter>
+          <CardFooter className='flex items-center justify-center mt-5'>
                 <div className='flex items-center justify-center'>
                  <p className='text-sm text-muted-foreground'>
                   Don&apos;t have an account?
