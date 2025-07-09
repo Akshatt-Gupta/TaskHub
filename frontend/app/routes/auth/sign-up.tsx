@@ -6,12 +6,14 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button' // Don't forget to import Button
-import { Link } from 'react-router' // Assuming you're using react-router for navigation
+import { Link, useNavigate } from 'react-router' // Assuming you're using react-router for navigation
+import { useSignUpMutation } from '@/hooks/use-auth'
+import {toast} from "sonner" 
 
 
-type SignupFormData = z.infer<typeof signUpSchema>
-
-function SignUp() {
+export type SignupFormData = z.infer<typeof signUpSchema>
+const SignUp = ()=> {
+  const navigate=useNavigate();
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -21,12 +23,31 @@ function SignUp() {
       confirmPassword: ''
 
     },
-  }); 
+    
+  });
+  
+  const { mutate , isPending }=useSignUpMutation();
+  
 
-  const handleSubmit = (data: SignupFormData) => {
-    console.log('Form submitted:', data);
-    // Here you would typically handle the form submission, e.g., send data to an API
-  }
+  const handleSubmit = (values:  SignupFormData) => {
+    mutate(values,{
+      onSuccess:()=>{
+        toast.success("Account created succcessfully",{
+          description:
+          "Please check your Email for a verification link.If you dont't see it,please check your spam folder.",
+        });
+        form.reset();
+        navigate("/sign-in")
+
+      },
+      onError : (error:any)=>{
+        const errorMessage = error.response?.data?.message || "An error occurred";
+        console.log(error);
+        toast.error(errorMessage);
+
+      },
+    });
+  };
 
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-muted/40 p-4'>
@@ -90,8 +111,8 @@ function SignUp() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Sign Up
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Signing up..." : "Sign up"}
               </Button>
             </form>
           </Form>
