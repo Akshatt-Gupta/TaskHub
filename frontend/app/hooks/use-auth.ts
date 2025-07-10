@@ -8,4 +8,20 @@ export const useSignUpMutation = () => {
 });
 };
 
+export const useVerifiyEmailMutation = () =>{
+  return useMutation({
+    mutationFn:(data:{token:string})=>
+      postData("/auth/verify-email",data),
+  }
+
+  )
+}
+
+export const useLoginMutation = () => {
+  return useMutation({
+    mutationFn: (data: { email: string; password: string }) => 
+      postData("/auth/login", data)
+  });
+};
+
 

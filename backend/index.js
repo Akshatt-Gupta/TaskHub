@@ -12,6 +12,7 @@ const app = express();
 //configuring cors
 app.use(cors({
     origin: process.env.FRONTEND_URL, // Allow all origins
+    credentials:true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
@@ -39,8 +40,8 @@ app.get('/', async(req, res) => {
 app.use('/api-v1', routes); 
 
 // Middleware for handling 404 errors
-app.use((err,req, res,next) => {
-    console.log(err.stack);
+app.use((err, req, res, next) => {
+    console.error(err.stack);
     res.status(500).json({
         message: 'Internal Server Error',
     });
@@ -48,7 +49,6 @@ app.use((err,req, res,next) => {
 
 //not found middleware
 app.use((req, res) => {
-    console.error(err.stack);
     res.status(404).json({
         message: 'Not Found',
     });

@@ -3,12 +3,14 @@ import { Link,useSearchParams } from 'react-router'
 import {Card,CardContent,CardHeader} from "@/components/ui/card"
 import {ArrowLeft, CheckCircle, XCircle,Loader} from "lucide-react"
 import { Button } from '@/components/ui/button'
+import { useVerifiyEmailMutation } from '@/hooks/use-auth'
+import { toast } from 'sonner'
 
 
 function VerifyEmail() {
   const [searchParams]=useSearchParams()
   const [isSuccess,setIsSuccess]=useState(false);
-  const isVerifying=false;
+  const {mutate,isPending:isVerifying}=useVerifiyEmailMutation(); 
 
   useEffect(() => {
     const token=searchParams.get("token");
@@ -17,7 +19,19 @@ function VerifyEmail() {
       setIsSuccess(false);
     }
     else{
-      setIsSuccess(false);
+      mutate({token},{
+        onSuccess:()=>{
+          setIsSuccess(true);
+        },
+        onError:(error:any)=>{
+          const errorMessage=error.response?.data?.message||"An error occurred";
+          setIsSuccess(false);
+          console.log(error);
+          toast.error(errorMessage);
+        },
+      }
+      )
+      
     }
 
   
