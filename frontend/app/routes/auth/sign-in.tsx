@@ -10,12 +10,14 @@ import { Link, useNavigate } from 'react-router' // Assuming you're using react-
 import { useLoginMutation } from '@/hooks/use-auth'
 import {toast} from "sonner"
 import { Loader, Loader2 } from 'lucide-react'
+import { useAuth } from '@/provider/auth-context'
 
 
 type SigninFormData = z.infer<typeof signInSchema>
 
 function SignIn() {
   const navigate=useNavigate();
+  const {login} =useAuth();
   const form = useForm<SigninFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -30,6 +32,7 @@ function SignIn() {
     mutate(data, {
       onSuccess: (data) => {
         console.log(data);
+        login(data);
         toast.success("Login Successful");
         navigate("/dashboard");
       },

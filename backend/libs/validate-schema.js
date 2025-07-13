@@ -12,6 +12,19 @@ const loginSchema = z.object({
 });
 const verifyEmailSchema=z.object({
     token:z.string().min(1,"Token is requires"),
-})
+});
+const resetPasswordSchema=z.object({
+    token:z.string().min(1,"Token is required"),
+    newPassword:z.string().min(8,"Password must be atleat of 8 characters"),
+    confirmPassword:z.string().min(8,"Confirm Password is required"),
+});
+const emailSchema=z.object({
+    email:z.string().email("Invalid email address"),
+});
+const workspaceSchema = z.object({
+    name: z.string().min(1, "Workspace name is required"),
+    description: z.string().optional(),
+    color: z.string().min(1,"Color is required"),
+});
 
-export {registerSchema, loginSchema,verifyEmailSchema};
+export {registerSchema, loginSchema,verifyEmailSchema,resetPasswordSchema,emailSchema,workspaceSchema};
