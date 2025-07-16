@@ -8,6 +8,19 @@ import { Header } from '@/components/layout/header';
 import type { Workspace } from '@/type/index';
 import { SidebarComponent } from '@/components/layout/sidebar-component';
 import { CreateWorkspace } from '@/components/workspace/create-workspace'; 
+import { fetchData } from '@/lib/fetch-util';
+
+export const clientLoader=async()=>{
+  try {
+    const [workspaces]=await Promise.all([fetchData('/workspaces')]);
+
+    return { workspaces };
+  } catch (error) {
+    console.error("Error loading workspaces:", error);
+    
+  }
+}
+
 
 const DashboardLayout = () => {
   const { isAuthenticated, isLoading } = useAuth();

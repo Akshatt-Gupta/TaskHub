@@ -147,3 +147,5 @@ export const CreateWorkspace = ({
     </Dialog>
   );
 };
+
+export default CreateWorkspace;

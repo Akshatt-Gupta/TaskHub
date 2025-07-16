@@ -4,14 +4,15 @@ import { string } from "zod";
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api-v1';
 
 const api=axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    baseURL: BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
+    console.log("Using token:", token);
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -19,16 +20,16 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => {
-    return response
+    (response) => {
+        return response
 },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized access, e.g., redirect to login
-      window.dispatchEvent(new Event('force-logout'));
+    (error) => {
+        if (error.response && error.response.status === 401) {
+          
+            window.dispatchEvent(new Event('force-logout'));
+        }
+        return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
 );
 
 const postData= async<T>(path: string, data: unknown): Promise<T> => {
@@ -38,18 +39,18 @@ const postData= async<T>(path: string, data: unknown): Promise<T> => {
 };
 
 const fetchData = async<T>(path:string): Promise<T> => {
-  const response = await api.get(path);
-  return response.data;
+    const response = await api.get(path);
+    return response.data;
 };
 
 const updateData = async<T>(path: string, data: unknown): Promise<T> => {
-  const response = await api.put(path, data);
-  return response.data;
+    const response = await api.put(path, data);
+    return response.data;
 };
 
 const deleteData = async<T>(path: string): Promise<T> => {
-  const response = await api.delete<T>(path);
-  return response.data;
+    const response = await api.delete<T>(path);
+    return response.data;
 };
 
-export {postData,fetchData,updateData,deleteData};
+export {postData,fetchData,updateData,deleteData};  

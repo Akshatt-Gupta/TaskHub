@@ -20,7 +20,7 @@
     "dotenv": "^17.0.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.1",
+    "mongoose": "^8.16.3",
     "morgan": "^1.10.0",
     "zod": "^3.25.75",
     "zod-express-middleware": "^1.4.0"

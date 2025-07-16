@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import { ta } from 'zod/v4/locales';
+
+const ProjectStatus = {
+    PLANNING: "Planning",
+    IN_PROGRESS: "In Progress", 
+    COMPLETED: "Completed",
+    ON_HOLD: "On Hold",
+    CANCELLED: "Cancelled"
+};
 
 export const signInSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -35,4 +44,26 @@ export const workspaceSchema = z.object({
   name: z.string().min(3, 'Workspace name is required' ),
   color: z.string().min(3, 'Color must be a valid hex code'),
   description: z.string().optional(),
+});
+
+export const projectSchema = z.object({
+    title: z.string().min(3, "Project name is required"),
+    description: z.string().optional(),
+    status: z.enum([
+        ProjectStatus.PLANNING,
+        ProjectStatus.IN_PROGRESS,
+        ProjectStatus.COMPLETED,
+        ProjectStatus.ON_HOLD,
+        ProjectStatus.CANCELLED
+    ]),
+    startDate: z.string().min(1, "Start date is required"), 
+    dueDate: z.string().min(1, "Due date is required"),     
+    members: z.array(z.object({
+        user: z.string(),
+        role: z.enum(["manager", "contributor", "viewer"]), 
+    })).optional(),
+    tags: z.string().optional(),
+}).refine(data => new Date(data.startDate) < new Date(data.dueDate), {
+    message: "Due date must be after start date",
+    path: ["dueDate"]
 });
