@@ -195,9 +195,10 @@ export const CreateProjectDialog = ({
                                                         onSelect={(date) => {
                                                             field.onChange(date ? date.toISOString() : "");
                                                         }}
+                                                        // Changed: Disable dates before today
                                                         disabled={(date) =>
-                                                            date < new Date(new Date().setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000)
-                                                        }
+    date < new Date(new Date().setHours(0, 0, 0, 0))
+}
                                                         initialFocus
                                                     />
                                                 </PopoverContent>
@@ -239,9 +240,10 @@ export const CreateProjectDialog = ({
                                                         onSelect={(date) => {
                                                             field.onChange(date ? date.toISOString() : "");
                                                         }}
+                                                        // Changed: Disable dates before today
                                                         disabled={(date) =>
-                                                            date < new Date(new Date().setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000)
-                                                        }
+    date < new Date(new Date().setHours(0, 0, 0, 0))
+}
                                                         initialFocus
                                                     />
                                                 </PopoverContent>

@@ -9,17 +9,16 @@ dotenv.config();
 
 const app = express();
 
-//configuring cors
 app.use(cors({
-    origin: process.env.FRONTEND_URL, // Allow all origins
+    origin: process.env.FRONTEND_URL, 
     credentials:true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
  
-app.use(morgan('dev')); // Logging middleware
+app.use(morgan('dev')); 
 
-//db connection
+
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log('Database connected successfully');
 }).catch((err) => {

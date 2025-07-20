@@ -73,7 +73,7 @@ const loginUser = async (req, res) => {
     const {email,password}=req.body;
     const user = await User.findOne({ email })
       .select("+password")
-      .maxTimeMS(30000); // Increase timeout to 30 seconds
+      //.maxTimeMS(30000); // Increase timeout to 30 seconds
     if(!user){
       return res.status(400).json({message:"Invalid Email or password"});
     }
@@ -195,7 +195,7 @@ const resetPasswordRequest= async(req,res)=>{
     const {email}=req.body;
     const user = await User.findOne({ email })
       .select("+password")
-      .maxTimeMS(30000); // Increase timeout to 30 seconds
+      //.maxTimeMS(30000); // Increase timeout to 30 seconds
 
     if(!user){
       return res.status(400).json({message:"User not found"});
