@@ -20,8 +20,7 @@ export const ProjectCard = ({
 }:ProjectCardProps) =>{
 
     return (
-        // CORRECTED: Added a leading slash to make the path absolute
-        // CORRECTED: Changed project._id to project.id as per your Project interface
+        
         <Link to={`/workspaces/${workspaceId}/projects/${project._id}`}>
         <Card className="transition-all duration-300 hover:shadow-md hover:translate-y-1 ">
             <CardHeader>

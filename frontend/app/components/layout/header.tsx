@@ -1,142 +1,128 @@
+import { useAuth } from "@/provider/auth-context";
 import type { Workspace } from "@/type";
-import React from "react";
 import { Button } from "../ui/button";
 import { Bell, PlusCircle } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-  DropdownMenuGroup,
-} from "@radix-ui/react-dropdown-menu";
-// Corrected import path for Avatar components to use your local UI library
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"; 
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import { useAuth } from "@/provider/auth-context";
-import { Link, useLoaderData } from "react-router";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+  DropdownMenuGroup,
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
 import { WorkspaceAvatar } from "../workspace/workspace-avatar";
 
 interface HeaderProps {
-  onWorkspaceSelected: (workspace: Workspace) => void;
-  selectedWorkspace: Workspace | null;
-  onCreateWorkspace: () => void;
+  onWorkspaceSelected: (workspace: Workspace) => void;
+  selectedWorkspace: Workspace | null;
+  onCreateWorkspace: () => void;
 }
 
 export const Header = ({
-  onWorkspaceSelected,
-  selectedWorkspace,
-  onCreateWorkspace,
+  onWorkspaceSelected,
+  selectedWorkspace,
+  onCreateWorkspace,
 }: HeaderProps) => {
-  const { user, logout } = useAuth();
-  
-    // Safely destructure 'workspaces' from useLoaderData().
-    // If useLoaderData() returns null or an object without 'workspaces',
-    // 'workspaces' will default to an empty array, preventing the error.
-  const { workspaces = [] } = useLoaderData() as { workspaces?: Workspace[] };
+  const navigate = useNavigate();
 
-  return (
-    <div className="bg-background sticky top-0 z-40 border-b">
-      <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant={"outline"}>
-              {selectedWorkspace ? (
-                <>
-                  <WorkspaceAvatar
-                    color={selectedWorkspace.color}
-                    name={selectedWorkspace.name}
-                  />
-                  <span className="font-medium">{selectedWorkspace.name}</span>
-                </>
-              ) : (
-                <span className="font-medium">Select Workspace</span>
-              )}
-            </Button>
-          </DropdownMenuTrigger>
+  const { user, logout } = useAuth();
+  const { workspaces } = useLoaderData() as { workspaces: Workspace[] };
+  const isOnWorkspacePage = useLocation().pathname.includes("/workspace");
 
-          <DropdownMenuContent className="w-56 bg-white shadow-lg rounded-md border p-2">
-            <DropdownMenuLabel className="px-3 py-2 text-sm font-medium text-gray-700">
-              Workspace
-            </DropdownMenuLabel>
+  const handleOnClick = (workspace: Workspace) => {
+    onWorkspaceSelected(workspace);
+    const location = window.location;
 
-            <DropdownMenuSeparator />
+    if (isOnWorkspacePage) {
+      navigate(`/workspaces/${workspace._id}`);
+    } else {
+      const basePath = location.pathname;
 
-            <DropdownMenuGroup className="space-y-1">
-                {/* Ensure workspaces is an array before mapping */}
-              {workspaces.map((ws) => (
-                <DropdownMenuItem
-                  key={ws._id}
-                  onClick={() => onWorkspaceSelected(ws)}
-                  className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-50 cursor-pointer transition-colors focus:outline-none focus:ring-0 focus:ring-offset-0"
-                >
-                  <WorkspaceAvatar color={ws.color} name={ws.name} />
-                  <span className="ml-2">{ws.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuGroup>
+      navigate(`${basePath}?workspaceId=${workspace._id}`);
+    }
+  };
 
-            <DropdownMenuSeparator />
+  return (
+    <div className="bg-background sticky top-0 z-40 border-b">
+      <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={"outline"}>
+              {selectedWorkspace ? (
+                <>
+                  {selectedWorkspace.color && (
+                    <WorkspaceAvatar
+                      color={selectedWorkspace.color}
+                      name={selectedWorkspace.name}
+                    />
+                  )}
+                  <span className="font-medium">{selectedWorkspace?.name}</span>
+                </>
+              ) : (
+                <span className="font-medium">Select Workspace</span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
 
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={onCreateWorkspace}
-                className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-50 cursor-pointer transition-colors focus:outline-none focus:ring-0 focus:ring-offset-0"
-              >
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Create Workspace
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Workspace</DropdownMenuLabel>
+            <DropdownMenuSeparator />
 
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="ml-auto">
-            <Bell className="h-5 w-5" />
-          </Button>
+            <DropdownMenuGroup>
+              {workspaces.map((ws) => (
+                <DropdownMenuItem
+                  key={ws._id}
+                  onClick={() => handleOnClick(ws)}
+                >
+                  {ws.color && (
+                    <WorkspaceAvatar color={ws.color} name={ws.name} />
+                  )}
+                  <span className="ml-2">{ws.name}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-  <button className="rounded-full p-0 w-8 h-8 bg-black overflow-hidden">
-    <Avatar className="w-full h-full">
-      <AvatarImage 
-        src={user?.profilePicture} 
-        alt={user?.name} 
-        className="object-cover"
-      />
-      <AvatarFallback className="w-full h-full bg-black text-white flex items-center justify-center">
-        {user?.name?.charAt(0)?.toUpperCase()}
-      </AvatarFallback>
-    </Avatar>
-  </button>
-</DropdownMenuTrigger>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={onCreateWorkspace}>
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Create Workspace
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-            <DropdownMenuContent
-              align="end"
-              className="w-48 bg-white shadow-lg rounded-md"
-            >
-              <DropdownMenuLabel className="px-4 py-2 font-medium">
-                My Account
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-100" />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon">
+            <Bell />
+          </Button>
 
-              <DropdownMenuItem className="px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                <Link to="/user/profile" className="w-full">
-                  Profile
-                </Link>
-              </DropdownMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="rounded-full border p-1 w-8 h-8">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={user?.profilePicture} alt={user?.name} />
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {user?.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
 
-              <DropdownMenuSeparator className="bg-gray-100" />
-              <DropdownMenuItem
-                className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-red-600"
-                onClick={logout}
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-    </div>
-  );
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link to="/user/profile">Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout}>Log Out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    </div>
+  );
 };

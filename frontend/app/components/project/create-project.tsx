@@ -68,7 +68,7 @@ export const CreateProjectDialog = ({
     const { mutate, isPending } = UseCreateProject();
 
     const onSubmit = (values: CreateProjectFormData) => {
-        console.log("Form submitted with values:", values); // Debug log
+        console.log("Form submitted with values:", values); 
         
         if (!workspaceId) {
             toast.error("Workspace ID is required");
@@ -85,7 +85,7 @@ export const CreateProjectDialog = ({
                 onOpenChange(false);
             },
             onError: (error: any) => {
-                console.error("Project creation error:", error); // Better error logging
+                console.error("Project creation error:", error); 
                 const errorMessage = error?.response?.data?.message || 
                                         error?.message || 
                                         "An error occurred while creating the project";

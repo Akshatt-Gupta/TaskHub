@@ -2,7 +2,7 @@
     import User from '../models/user.js'; 
     const authMiddleware = async (req, res, next) => {
         try {
-            const token = req.headers.authorization?.split(" ")[1];  //Bearer jafafnrrgrg
+            const token = req.headers.authorization?.split(" ")[1];  
             if(!token){
                 return res.status(401).json({ message: "Authentication token is required" });
             }
@@ -17,9 +17,9 @@
                 return res.status(404).json({ message: "User not found" });
             }
 
-            req.user = user;  // Attach the user document to the request object
+            req.user = user;  
             
-            next();  // Proceed to the next middleware or route handler
+            next();  
         } catch (error) {
             console.error("Authentication error:", error);
             return res.status(500).json({ message: "Internal server error" });

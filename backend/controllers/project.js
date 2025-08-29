@@ -13,11 +13,9 @@ export const createProject= async (req,res)=>{
             return res.status(404).json({message:"Workspace not found"});
         }
 
-        // Changed: Access member.user._id for comparison
         const isMemeber = workspace.members.some((member) => member.user.toString() === req.user._id.toString());
 
         if(!isMemeber){
-            // Changed: Added return here to prevent further execution
             return res.status(403).json({message:"You are not a member of this workspace"});
         }
 

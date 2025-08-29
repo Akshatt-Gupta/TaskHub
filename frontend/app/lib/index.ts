@@ -1,13 +1,14 @@
-import type { ProjectStatus,TaskStatus } from "@/type"
+import type { ProjectStatus, Task, TaskStatus } from "@/type";
 
-export const publicRoutes=[
-    "/sign-in",
-    "/sign-up",
-    "/verify-email",
-    "/reset-password",
-    "/forgot-password",
-    "/"
-]
+export const publicRoutes = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/verify-email",
+  "/reset-password",
+  "/forgot-password",
+  "*",
+];
 
 export const getTaskStatusColor = (status: ProjectStatus) => {
   switch (status) {

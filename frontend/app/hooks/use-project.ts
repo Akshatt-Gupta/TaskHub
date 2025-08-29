@@ -15,9 +15,9 @@ export const UseCreateProject = () =>{
                 queryKey : ["workspace",data.workspace],
         });
         },
-        onError: (error: any) => { // Added onError callback here
+        onError: (error: any) => { 
             console.error("Project creation mutation error:", error);
-            // You might want to display a toast or handle the error in the UI here
+            
         }
     });
 };

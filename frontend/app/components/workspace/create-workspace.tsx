@@ -115,7 +115,7 @@ export const CreateWorkspace = ({
                         {colorOptions.map((color) => (
                           <Button
                             key={color}
-                            type="button"  // THE ONLY CHANGE MADE
+                            type="button"  
                             variant="outline"
                             className={cn(
                               "w-6 h-6 rounded-full cursor-pointer hover:opacity-80 transition-all duration-300",

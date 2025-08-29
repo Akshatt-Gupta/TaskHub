@@ -43,7 +43,7 @@ const ResetPassword = () => {
   const onSubmit = (values: ResetPasswordFormData) => {
   if(!token){
     toast.error("Invalid Token");
-    return; // Add this return statement!
+    return; 
   }
 
   resetPassword(

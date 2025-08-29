@@ -45,7 +45,7 @@ const TaskDetails = () => {
 
   if (isLoading) {
     return (
-      <div>
+      <div className="flex items-center justify-center min-h-screen">
         <Loader />
       </div>
     );
@@ -53,8 +53,10 @@ const TaskDetails = () => {
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl font-bold">Task not found</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="text-2xl font-bold text-muted-foreground">Task not found</div>
+        </div>
       </div>
     );
   }
@@ -87,7 +89,7 @@ const TaskDetails = () => {
       { taskId: task._id },
       {
         onSuccess: () => {
-          toast.success("Task achieved");
+          toast.success("Task archieved");
         },
         onError: () => {
           toast.error("Failed to achieve task");
@@ -97,58 +99,25 @@ const TaskDetails = () => {
   };
 
   return (
-    <div className="container mx-auto p-0 py-4 md:px-4">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-        <div className="flex flex-col md:flex-row md:items-center">
-          <BackButton />
-
-          <h1 className="text-xl md:text-2xl font-bold">{task.title}</h1>
-
-          {task.isArchived && (
-            <Badge className="ml-2" variant={"outline"}>
-              Archived
-            </Badge>
-          )}
-        </div>
-
-        <div className="flex space-x-2 mt-4 md:mt-0">
-          <Button
-            variant={"outline"}
-            size="sm"
-            onClick={handleWatchTask}
-            className="w-fit"
-            disabled={isWatching}
-          >
-            {isUserWatching ? (
-              <>
-                <EyeOff className="mr-2 size-4" />
-                Unwatch
-              </>
-            ) : (
-              <>
-                <Eye className="mr-2 size-4" />
-                Watch
-              </>
-            )}
-          </Button>
-
-          <Button
-            variant={"outline"}
-            size="sm"
-            onClick={handleAchievedTask}
-            className="w-fit"
-            disabled={isAchieved}
-          >
-            {task.isArchived ? "Unarchive" : "Archive"}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="lg:col-span-2">
-          <div className="bg-card rounded-lg p-6 shadow-sm mb-6">
-            <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-              <div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto max-w-7xl px-4 py-6 lg:px-8">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex flex-col space-y-4 md:flex-row md:items-start md:justify-between md:space-y-0">
+            <div className="flex flex-col space-y-3">
+              <div className="flex items-center space-x-3">
+                <BackButton />
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-2xl font-bold text-foreground lg:text-3xl">{task.title}</h1>
+                  {task.isArchived && (
+                    <Badge variant="outline" className="text-xs">
+                      Archived
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 <Badge
                   variant={
                     task.priority === "High"
@@ -157,65 +126,123 @@ const TaskDetails = () => {
                       ? "default"
                       : "outline"
                   }
-                  className="mb-2 capitalize"
+                  className="capitalize"
                 >
                   {task.priority} Priority
                 </Badge>
+                <span>•</span>
+                <span>
+                  Created {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}
+                </span>
+              </div>
+            </div>
 
-                <TaskTitle title={task.title} taskId={task._id} />
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleWatchTask}
+                disabled={isWatching}
+                className="min-w-fit"
+              >
+                {isUserWatching ? (
+                  <>
+                    <EyeOff className="mr-2 h-4 w-4" />
+                    Unwatch
+                  </>
+                ) : (
+                  <>
+                    <Eye className="mr-2 h-4 w-4" />
+                    Watch
+                  </>
+                )}
+              </Button>
 
-                <div className="text-sm md:text-base text-muted-foreground">
-                  Created at:{" "}
-                  {formatDistanceToNow(new Date(task.createdAt), {
-                    addSuffix: true,
-                  })}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleAchievedTask}
+                disabled={isAchieved}
+                className="min-w-fit"
+              >
+                {task.isArchived ? "Unarchive" : "Archive"}
+              </Button>
+
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => {}}
+                className="min-w-fit"
+              >
+                Delete Task
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 xl:gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2">
+            <div className="space-y-6">
+              {/* Task Details Card */}
+              <div className="rounded-lg border bg-card p-6 shadow-sm">
+                <div className="space-y-6">
+                  {/* Title and Status */}
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-2">
+                      <TaskTitle title={task.title} taskId={task._id} />
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <TaskStatusSelector status={task.status} taskId={task._id} />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-foreground">Description</h3>
+                    <TaskDescription
+                      description={task.description || ""}
+                      taskId={task._id}
+                    />
+                  </div>
+
+                  {/* Task Properties */}
+                  <div className="space-y-4">
+                    <TaskAssigneesSelector
+                      task={task}
+                      assignees={task.assignees}
+                      projectMembers={project.members as any}
+                    />
+
+                    <TaskPrioritySelector priority={task.priority} taskId={task._id} />
+                  </div>
+
+                  {/* Sub Tasks */}
+                  <SubTasksDetails subTasks={task.subtasks || []} taskId={task._id} />
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 mt-4 md:mt-0">
-                <TaskStatusSelector status={task.status} taskId={task._id} />
-
-                <Button
-                  variant={"destructive"}
-                  size="sm"
-                  onClick={() => {}}
-                  className="hidden md:block"
-                >
-                  Delete Task
-                </Button>
+              {/* Comments Section */}
+              <div className="rounded-lg border bg-card shadow-sm">
+                <CommentSection taskId={task._id} members={project.members as any} />
               </div>
             </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-muted-foreground mb-0">
-                Description
-              </h3>
-
-              <TaskDescription
-                description={task.description || ""}
-                taskId={task._id}
-              />
-            </div>
-
-            <TaskAssigneesSelector
-              task={task}
-              assignees={task.assignees}
-              projectMembers={project.members as any}
-            />
-
-            <TaskPrioritySelector priority={task.priority} taskId={task._id} />
-
-            <SubTasksDetails subTasks={task.subtasks || []} taskId={task._id} />
           </div>
 
-          <CommentSection taskId={task._id} members={project.members as any} />
-        </div>
+          {/* Right Column - Sidebar */}
+          <div className="space-y-6">
+            {/* Watchers */}
+            <div className="rounded-lg border bg-card shadow-sm">
+              <Watchers watchers={task.watchers || []} />
+            </div>
 
-        {/* right side */}
-        <div className="w-full">
-          <Watchers watchers={task.watchers || []} />
-
-          <TaskActivity resourceId={task._id} />
+            {/* Activity */}
+            <div className="rounded-lg border bg-card shadow-sm">
+              <TaskActivity resourceId={task._id} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

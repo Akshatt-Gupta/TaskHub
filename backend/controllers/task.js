@@ -617,7 +617,7 @@ const achievedTask = async (req, res) => {
 
     // record activity
     await recordActivity(req.user._id, "updated_task", "Task", taskId, {
-      description: `${isAchieved ? "unachieved" : "achieved"} task ${
+      description: `${isAchieved ? "unarchieved" : "archieved"} task ${
         task.title
       }`,
     });

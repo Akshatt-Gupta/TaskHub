@@ -63,7 +63,7 @@ export const WorkspaceHeader = ({
       <div className="flex items-center gap-2">
         <span className="text-sm text-muted-foreground">Members</span>
         <div className="flex space-x-2">
-          {members.map((member) => (
+          {members.filter(member => member.user).map((member) => (
             <Avatar
               key={member._id}
               className="relative h-8 w-8 rounded-full border-2 border-background overflow-hidden"
@@ -82,4 +82,4 @@ export const WorkspaceHeader = ({
   </div>
 );
 }
-    
+

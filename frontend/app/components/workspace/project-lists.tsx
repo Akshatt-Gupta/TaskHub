@@ -4,7 +4,7 @@ import { ProjectCard } from "../project/project-card";
 
 interface ProjectListProps {
     workspaceId: string;
-    projects: Project[] | undefined; // Allow undefined
+    projects: Project[] | undefined; 
     onCreateProject: () => void;
 } 
 

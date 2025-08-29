@@ -13,16 +13,16 @@ const registerUser = async (req, res) => {
     const decision = await aj.protect(req, { email });
     console.log("Arcjet decision details:", {
   isDenied: decision.isDenied(),
-  reason: decision.reason, // Add this to see why it's denying
-  email: email // Verify the email being checked
+  reason: decision.reason, // Add this to see reason for rejecting
+  email: email 
 });
     if (decision.isDenied()) {
   return res.status(403).json({ 
     message: "Email validation failed",
-    reason: decision.reason // Include this in response
+    reason: decision.reason 
   });
 }
-    //email verification done with arcjet
+    
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -49,11 +49,11 @@ const registerUser = async (req, res) => {
       token: verificationToken,
       expiresAt: new Date(Date.now() + 60 * 60 * 1000),
     });
-
+    //---------------------------------------------------email verification link---------
     const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
     const emailBody = `<p>Click <a href="${verificationLink}">here</a> to verify your email</p>`;
     const emailSubject = "Verify your email";
-
+  //---------------------------------------------------send email---------------------------
     const isEmailSent = await sendEmail(email, emailSubject, emailBody);
     if (!isEmailSent) {
       return res.status(500).json({ message: "Failed to send verification email" });
@@ -71,9 +71,9 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const {email,password}=req.body;
-    const user = await User.findOne({ email })
-      .select("+password")
-      //.maxTimeMS(30000); // Increase timeout to 30 seconds
+      const user = await User.findOne({ email })
+        .select("+password")
+      
     if(!user){
       return res.status(400).json({message:"Invalid Email or password"});
     }
@@ -277,7 +277,7 @@ const verifyResetPasswordTokenAndResetPassword = async (req, res) => {
     const { userId, purpose } = payload;
     console.log('7. Token payload - userId:', userId, 'purpose:', purpose);
 
-    if (purpose !== "reset password") {
+    if (purpose !== "reset-password") {
       console.log('8. ERROR: Purpose mismatch. Expected: "reset password", Got:', purpose);
       return res.status(401).json({ message: "Invalid token purpose" });
     }

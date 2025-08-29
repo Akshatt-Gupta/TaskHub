@@ -1,58 +1,68 @@
-import {z} from "zod";
+import { z } from "zod";
 
-
-
-export const registerSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
+const registerSchema = z.object({
+  name: z.string().min(3, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
-export const loginSchema = z.object({
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
 });
 
-export const verifyEmailSchema = z.object({
-    token: z.string().min(1, "Token is required"),
+const verifyEmailSchema = z.object({
+  token: z.string().min(1, "Token is required"),
 });
 
-export const resetPasswordSchema = z.object({
-    token: z.string().min(1, "Token is required"),
-    newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(8, "Confirm Password is required"),
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters long"),
+  confirmPassword: z.string().min(1, "Confirm password is required"),
 });
 
-export const emailSchema = z.object({
-    email: z.string().email("Invalid email address"),
+const emailSchema = z.object({
+  email: z.string().email("Invalid email address"),
 });
- 
-export const workspaceSchema = z.object({
-    name: z.string().min(1, "Workspace name is required"),
-    description: z.string().optional(),
-    color: z.string().min(1, "Color is required"),
+
+const inviteMemberSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  role: z.enum(["admin", "member", "viewer"]),
 });
- 
-const projectSchema=z.object({
-    title:z.string().min(3,"Title is required"),
-    description:z.string().optional(),
-    status:z.enum([
-        "Planning",
-        "In Progress",
-        "On Hold",
-        "Completed",
-        "Cancelled",
-    ]),
-    startDate:z.string(),
-    dueDate:z.string(),
-    tags:z.string().optional(),
-    members:z.array(
-        z.object({
-            user:z.string(),
-            role:z.enum(["manager","contributor","viewer"]),
-        })
-    ).optional()
+
+const tokenSchema = z.object({
+  token: z.string().min(1, "Token is required"),
 });
+
+const workspaceSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  color: z.string().min(1, "Color is required"),
+});
+
+const projectSchema = z.object({
+  title: z.string().min(3, "Title is required"),
+  description: z.string().optional(),
+  status: z.enum([
+    "Planning",
+    "In Progress",
+    "On Hold",
+    "Completed",
+    "Cancelled",
+  ]),
+  startDate: z.string(),
+  dueDate: z.string().optional(),
+  tags: z.string().optional(),
+  members: z
+    .array(
+      z.object({
+        user: z.string(),
+        role: z.enum(["manager", "contributor", "viewer"]),
+      })
+    )
+    .optional(),
+});
+
 const taskSchema = z.object({
   title: z.string().min(1, "Task title is required"),
   description: z.string().optional(),
@@ -62,9 +72,15 @@ const taskSchema = z.object({
   assignees: z.array(z.string()).min(1, "At least one assignee is required"),
 });
 
-export{
-    projectSchema,taskSchema,
-}
-
-
-
+export {
+  registerSchema,
+  loginSchema,
+  verifyEmailSchema,
+  resetPasswordSchema,
+  emailSchema,
+  workspaceSchema,
+  projectSchema,
+  taskSchema,
+  inviteMemberSchema,
+  tokenSchema,
+};

@@ -66,7 +66,7 @@ router.post(
 );
 
 router.post(
-  "/:taskId/achieved",
+  "/:taskId/archieved",
   authMiddleware,
   validateRequest({
     params: z.object({ taskId: z.string() }),
