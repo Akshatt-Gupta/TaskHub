@@ -14,10 +14,11 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = process.env.FRONTEND_URL.split(",").map(o => o.trim());
+      console.log("CORS check: incoming origin:", origin, "allowed:", allowedOrigins);
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS: " + origin));
       }
     },
     methods: ["GET", "POST", "DELETE", "PUT"],
@@ -60,14 +61,23 @@ app.get("/", async (req, res) => {
 // http:localhost:500/api-v1/
 app.use("/api-v1", routes);
 
+
 // error middleware
 app.use((err, req, res, next) => {
   console.log(err.stack);
+  // Set CORS headers on error
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.status(500).json({ message: "Internal server error" });
 });
 
 // not found middleware
 app.use((req, res) => {
+  // Set CORS headers on 404
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.status(404).json({
     message: "Not found",
   });
