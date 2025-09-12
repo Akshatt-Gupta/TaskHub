@@ -22,8 +22,24 @@ app.use(
     },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
+
+// Handle preflight requests for all routes
+app.options("*", cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = process.env.FRONTEND_URL.split(",").map(o => o.trim());
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
 app.use(morgan("dev"));
 
 // db connection
