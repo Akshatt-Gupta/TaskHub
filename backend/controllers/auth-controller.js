@@ -13,7 +13,7 @@ const registerUser = async (req, res) => {
     const decision = await aj.protect(req, { email });
     console.log("Arcjet decision details:", {
   isDenied: decision.isDenied(),
-  reason: decision.reason, // Add this to see reason for rejecting
+  reason: decision.reason, 
   email: email 
 });
     if (decision.isDenied()) {

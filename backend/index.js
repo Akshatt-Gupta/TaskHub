@@ -35,7 +35,7 @@ app.get("/", async (req, res) => {
     message: "Welcome to TaskHub API",
   });
 });
-// http:localhost:500/api-v1/
+// http://localhost:5000/api-v1/
 app.use("/api-v1", routes);
 
 // error middleware

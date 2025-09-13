@@ -18,7 +18,7 @@ export const SidebarComponent = ({
   const { user, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Dynamically construct the href for the Dashboard link
+  
   // If a currentWorkspace is selected, append its ID as a query parameter
   const dashboardHref = currentWorkspace ? `/dashboard?workspaceId=${currentWorkspace._id}` : "/dashboard";
 

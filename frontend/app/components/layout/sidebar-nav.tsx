@@ -13,14 +13,14 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   }[];
   isCollapsed: boolean;
   className?: string;
-  currentWorkspace: Workspace | null; // This prop is correctly passed but its usage needs refinement
+  currentWorkspace: Workspace | null; 
 }
 
 export const SidebarNav = ({
   items,
   isCollapsed,
   className,
-  currentWorkspace, // Keep this prop, as other components might use it
+  currentWorkspace, 
   ...props
 }: SidebarNavProps) => {
   const navigate = useNavigate();
